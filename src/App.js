@@ -1,37 +1,55 @@
 import { Excalidraw } from "@excalidraw/excalidraw";
 
-function App() {
+import React, { useEffect, useRef, useState } from "react";
+
+
+
+ function App() {
+
+
+
+
+  const [initialState, setinitialState] = useState([]);
+   
+  
+  useEffect(() => {
+    setinitialState(JSON.parse(localStorage.getItem("sceneData")));
+  }, [initialState]);
+
+
+  const [excalidrawAPI, setExcalidrawAPI] = useState(null);
+
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1>
+      <h1 style={{ textAlign: "center" }}>Ehsaan Draw</h1>
       <div style={{ height: "500px" }}>
-        <Excalidraw 
-         initialData={{
-          elements: [
-            {
-              type: "rectangle",
-              version: 141,
-              versionNonce: 361174001,
-              isDeleted: false,
-              id: "oDVXy8D6rom3H1-LLH2-f",
-              fillStyle: "hachure",
-              strokeWidth: 1,
-              strokeStyle: "solid",
-              roughness: 1,
-              opacity: 100,
-              angle: 0,
-              x: 100.50390625,
-              y: 93.67578125,
-              strokeColor: "#000000",
-              backgroundColor: "transparent",
-              width: 186.47265625,
-              height: 141.9765625,
-              seed: 1968410350,
-              groupIds: [],
-            },
-          ],
-          appState: { zenModeEnabled: true, viewBackgroundColor: "#a5d8ff" },
-          scrollToContent: true
+        <Excalidraw
+
+        excalidrawAPI={(api)=> setExcalidrawAPI(api)}
+        initialData={{ elements:initialState}}
+        renderTopRightUI={() => {
+          return (
+            <button
+              style={{
+                background: "#70b1ec",
+                border: "none",
+                color: "#fff",
+                width: "max-content",
+                fontWeight: "bold",
+              }}
+              onClick={() => 
+                {
+
+
+                  localStorage.setItem("sceneData", JSON.stringify(excalidrawAPI?.getSceneElements()) );
+
+                window.alert("Data save successfully")}
+
+              }
+            >
+              Save Me
+            </button>
+          );
         }}
         />
       </div>
