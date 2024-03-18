@@ -10,7 +10,7 @@ import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
-const SideNav = ({ values, handleDelete, handleEdit }) => {
+const SideNav = ({ values, handleDelete, handleEdit,id }) => {
     const [open, setOpen] = useState(false);
 
     const toggleDrawer = () => {
@@ -35,12 +35,13 @@ const SideNav = ({ values, handleDelete, handleEdit }) => {
     >
       <List>
         <ListItem>
-          <ListItemText primary="Sketch Files" />
+          <h2> Documents</h2>  
         </ListItem>
+        
         {
           values.map((item, index) => (
             <Grid container spacing={2} key={index}>
-              <Grid item xs={12}>
+              <Grid item xs={12}  style={{backgroundColor: item.id == id ? 'green':'' }}>
                 <DataCard 
                   userName={item.userName1} 
                   scenes={item.scenes1} 

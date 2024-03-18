@@ -1,25 +1,26 @@
 import { Excalidraw } from "@excalidraw/excalidraw";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
-function EhsaanDrawScreen() {
+function EhsaanDrawScreen({updateData,scenes}) {
 
-    const [initialState, setinitialState] = useState([]);
-   
-    useEffect(() => {
-      setinitialState(JSON.parse(localStorage.getItem("sceneData")));
-        }, [initialState]);
-  
     const [excalidrawAPI, setExcalidrawAPI] = useState(null);
   
+
+
+
+    useEffect(() => {
+  
+      excalidrawAPI?.updateScene(  {elements:scenes});
+    }, [scenes,excalidrawAPI]);
+
+
     return (
       <>
-        <h1 style={{ textAlign: "center" }}>Ehsaan Draw</h1>
         <div style={{ height: "500px" }}>
           <Excalidraw
   
           excalidrawAPI={(api)=> setExcalidrawAPI(api)}
-          initialData={{ elements:initialState}}
           renderTopRightUI={() => {
             return (
               <button
@@ -32,11 +33,11 @@ function EhsaanDrawScreen() {
                 }}
                 onClick={() => 
                   {
-  
-  
-                    localStorage.setItem("sceneData", JSON.stringify(excalidrawAPI?.getSceneElements()) );
+
                     
-                  window.alert("Data save successfully")}
+                    updateData(excalidrawAPI?.getSceneElements())
+              
+                }
   
                 }
               >

@@ -13,9 +13,9 @@ const DataCard = ({ userName, scenes, onDelete, onEdit }) => {
           <Typography variant="h5" component="div">
             {userName}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          {/* <Typography variant="body2" color="text.secondary">
             {scenes}
-          </Typography>
+          </Typography> */}
           <Button onClick={onDelete} startIcon={<DeleteIcon />}>
             Delete
           </Button>
