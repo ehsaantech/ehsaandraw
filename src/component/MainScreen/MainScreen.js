@@ -46,57 +46,13 @@ const MainApplication = ({ handleLogout, gitHubId , user}) => {
   const handleClose = () => setOpen(false);
   
   const handleCreateBoard = async () => {
-    // const value = collection(database, "appdata");
-    // const data = await addDoc(value, { userName1: userName, scenes1: []});
-
-
-
-
-
-  // const appdataRef = doc(database, "appdata", gitHubId);
-  // const data = await updateDoc(appdataRef, {
-  //     key1: { userName1: userName, scenes1: []}
-  // });
-
-
-
-//   const appdataRef = doc(database, "appdata", gitHubId);
-// const newDataRef = child(appdataRef, 'key1').push(); // Generate unique key under 'key1'
-
-// const data = await updateDoc(newDataRef, {
-//     userName1: userName,
-//     scenes1: []
-// });
-
-
-
-
-// const appdataRef = doc(database, "appdata", gitHubId);
-// const newDataRef = doc(appdataRef.collection('key1')); // Generate unique key under 'key1' collection
-
-// const data = await setDoc(newDataRef, {
-//     userName1: userName,
-//     scenes1: []
-// });
-
-
-
-// const appdataRef = doc(database, "appdata","users");
-// const key1CollectionRef = collection(appdataRef, gitHubId);
-// const newDocRef = doc(key1CollectionRef); // Firestore will generate a unique ID
-
-// const data = await setDoc(newDocRef, {
-//     userName1: userName,
-//     scenes1: []
-// });
+  
 
 const appdataRef = collection(database, "users", `${gitHubId}/scenes`);
 const newSceneData = {
-  // Add whatever properties you want for the new scene
-  // Example:
+ 
   userName1: userName,
   scenes1: []
-  // Add more properties as needed
 };
 const newSceneRef = await addDoc(appdataRef, newSceneData);
 
@@ -110,102 +66,13 @@ console.log("New scene added with ID: ", newSceneRef.id);
   useEffect(() => {
     const getData = async () => {
 
-
-
-      // get list of scenes
-      // replace draws with scenes in firebase data
-      // remove appdata from firebase data -> this is a short term fix!!!! But need to have better understanding of how firebase works!!!
-      // save json against a single scene on first save
-      // render a single scene with appdata/users/userid/scenes/sceneId
-      // update single scene
-
-      // Written by Haroon Bhai
-// const appdataRef = doc(database, "appdata", "users/m7VSqiaucPTD0rycgBHQuF7GprE2/draws");
-
-// First case 
 const appdataRef = collection(database, "users", `${gitHubId}/scenes`);
-
-// const dataCollection = await collection(database,"scenes")
-
 const docSnap = await getDocs(appdataRef);
 
-
 console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
-
-
-      // setValues(dbValue.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-
-// const key1CollectionRef = collection(appdataRef, gitHubId);
-
-
-
-// console.log("key1CollectionRef",key1CollectionRef);
-
-
-
-//       const docRef = doc(database, "appdata", "users");
-// const docSnap = await getDoc(docRef);
-
-// if (docSnap.exists()) {
-//   console.log("Document data:", docSnap.data());
-// } else {
-//   // docSnap.data() will be undefined in this case
-//   console.log("No such document!");
-// }
-
-
-
-      // const dbValue = await getDocs(collection(database, "users"));
-
-
-      // console.log("dbValue",dbValue);
-
-      // dbValue.docs.forEach((doc) => {
-
-
-      //   console.log("doc.users");
-      //   console.log(doc);
-
-      // });
-
-
-      //setValues(dbValue.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getData();
   });
-
-  // useEffect(() => {
-  //   const updateDocument = async () => {
-  //     try {
-  //       const docRef = doc(database, "users", "m7VSqiaucPTD0rycgBHQuF7GprE2", "scenes", "YJSP4CtoxVAIdLk6w2Bh");
-  //       const docSnap = await getDoc(docRef);
-        
-  //       // Check if the document exists
-  //       if (docSnap.exists()) {
-  //         const currentData = docSnap.data();
-          
-  //         // Modify the data as needed
-  //         // For example, let's update a property named 'updatedAt'
-  //         const newData = {
-  //           ...currentData,
-  //           updatedAt: new Date() // Add/update any properties here
-  //         };
-  
-  //         // Update the document with the modified data
-  //         await updateDoc(docRef, newData);
-  //         console.log("Document updated",newData);
-  //         console.log("Document updated successfully");
-  //       } else {
-  //         console.log("Document does not exist");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating document: ", error);
-  //     }
-  //   };
-  
-  //   updateDocument();
-  // }, []);
-  
 
 
   const handleDelete = async (id) => {
@@ -222,48 +89,7 @@ console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
     setId(id);
   };
 
-  
-
-  // useEffect(()=>{
-
-  //   const elements = {
-  //     document: {
-  //       scene1: "JSON",
-  //       userName: "Ehsaans",
-  
-  //     // },
-  //     // scene2: {
-  //     //   name: "Scene 2",
-  //     //   description: "Description of Scene 2",
-  //     //   imageUrl: "https://example.com/image2.jpg",
-  //       // Add other properties as needed
-  //     },
-  //     // Add more scenes as needed
-  //   };
-  //   const updateData = async (elements) => {
-  //     // if(!"YJSP4CtoxVAIdLk6w2Bh"){
-  //     //   window.alert("Please select a document or create a new one.")
-  //     //   return false;
-  //     // }
-  //     const updateValue = doc(database, "users", "YJSP4CtoxVAIdLk6w2Bh");
-  //      await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
-  //      window.alert("Document update successfully");
-  //     setScenes(elements);
-  //   }
-  //   updateData(elements);
-
-  // },[])
-
   const updateData = async (elements) => {
-    // if(!"YJSP4CtoxVAIdLk6w2Bh"){
-    //   window.alert("Please select a document or create a new one.")
-    //   return false;
-    // }
-    // const updateValue = doc(database, "users", "YJSP4CtoxVAIdLk6w2Bh");
-    //  await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
-    //  window.alert("Document update successfully");
-    // setScenes(elements);
-
     if(!id){
       window.alert("Please select a document or create a new one.")
       return false;
