@@ -5,9 +5,6 @@ import React, { useEffect, useState } from "react";
 function EhsaanDrawScreen({updateData,scenes}) {
 
     const [excalidrawAPI, setExcalidrawAPI] = useState(null);
-  
-
-
 
     useEffect(() => {
   
@@ -33,10 +30,7 @@ function EhsaanDrawScreen({updateData,scenes}) {
                 }}
                 onClick={() => 
                   {
-
-                    
                     updateData(excalidrawAPI?.getSceneElements())
-              
                 }
   
                 }
