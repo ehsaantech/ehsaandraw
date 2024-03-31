@@ -13,7 +13,7 @@ import {
   doc,
   deleteDoc,
   updateDoc,
-  setDoc,
+setDoc,
   getDoc
 } from "firebase/firestore";
 import Grid from "@mui/material/Grid";
@@ -21,6 +21,8 @@ import EhsaanDrawScreen from "../EhsaanDraw/EhsaanDraw";
 import DocumentList from "../DocumentList/DocumentList";
 import CardList from "../CardList/CardList";
 import { AddSquare } from "iconsax-react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import EditPage from "../Edit Page/EditScreen";
 
 const style = {
   position: "absolute",
@@ -34,14 +36,16 @@ const style = {
   p: 4,
 };
 
-const MainApplication = ({ handleLogout, gitHubId , user}) => {
+const MainApplication = ({ handleLogout, gitHubId , user }) => {
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [scenes, setScenes] = useState([]);
   const [values, setValues] = useState([]);
   const [id, setId] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-
+  console.log("GitMain scere",gitHubId)
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
@@ -85,20 +89,12 @@ console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
     if(scenes.length > 0){
       scene = JSON.parse(scenes);
     }
+    navigate(`/edit/${id}`);
     setScenes(scene);
     setId(id);
   };
 
-  const updateData = async (elements) => {
-    if(!id){
-      window.alert("Please select a document or create a new one.")
-      return false;
-    }
-    const updateValue =doc(database, "users", `${gitHubId}/scenes`, id);
-     await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
-     window.alert("Document update successfully");
-    setScenes(elements);
-  };
+ 
 
   return (
     <div>
@@ -109,15 +105,33 @@ console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
       <h1 style={{ margin: 0 }}>Ehsaan Draw</h1>
     </div>
     <div>
-      <AddSquare onClick={handleOpen} size="32" color="#0000FF
-"/>
+    <Button 
+                style={{
+                  background: "#70b1ec",
+                  border: "none",
+                  color: "#fff",
+                  width: "max-content",
+                  fontWeight:             "bold",
+                }}
+                onClick={handleLogout}
+  
+                
+              >
+                Logout
+              </Button>
+    </div>
+    <div>
+      <AddSquare onClick={handleOpen} size="32" color="#0000FF"/>
     </div>
   </header>
 </div>
-      <EhsaanDrawScreen 
+      {/* <EhsaanDrawScreen 
         updateData={updateData}
         scenes={scenes}
-      />
+      /> */}
+       {location.pathname.startsWith('/edit') && (
+        <EditPage  />
+      )}
       <Modal
         open={open}
         onClose={handleClose}
@@ -139,6 +153,8 @@ console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
                 style={{ marginBottom: "10px" }}
               />
             </div>
+            
+
             <Button
               variant="contained"
               onClick={handleCreateBoard}

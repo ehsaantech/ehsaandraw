@@ -1,25 +1,51 @@
 import { useParams } from "react-router-dom";
 import {useLocation} from "react-router-dom";
 import EhsaanDrawScreen from "../EhsaanDraw/EhsaanDraw";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+  updateDoc,
+setDoc,
+  getDoc
+} from "firebase/firestore";
+import { database } from "../../firebaseConfig";
+import { useState ,useEffect } from "react";
 
-function EditPage() {
+function EditPage({gitHubId ,setValues }) {
+
+  const [updatedScenes, setUpdatedScenes] = useState([]);
+
+
+
+
+  
+    console.log("Githhhhhhfdfshfshshfds",gitHubId)
     const { id } = useParams(); // Get the ID from the URL
-    const { state } = useLocation(); // Get the state passed from the previous page
-  
-    // Now you have access to id, userName, and scenes
-    const { userName, scenes } = state;
-  
-    // Render your edit page using the received data
+
+    const updateData = async (elements) => {
+      if(!id){
+        window.alert("Please select a document or create a new one.")
+        return false;
+      }
+      const updateValue =doc(database, "users", `${gitHubId}/scenes`, id);
+       await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
+       window.alert("Document update successfully");
+       setUpdatedScenes(elements);
+    };
+
     return (
       <div>
         <h1>Edit Page for ID: {id}</h1>
-        <p>User Name: {userName}</p>
-        <p>Scenes: {scenes}</p>
-        {/* Now fetch EhsaanDrawScreen content based on the ID */}
-        <EhsaanDrawScreen scenes={scenes} />
-        {/* Add your edit form here */}
+       
+ <EhsaanDrawScreen 
+        updateData={updateData}
+        scenes={updatedScenes}
+      />    
       </div>
     );
   }
   
-  export default MainComponent;
+  export default EditPage;

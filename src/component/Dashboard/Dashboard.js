@@ -144,7 +144,7 @@ export default function Dashboard({handleLogout,gitHubId,user}) {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
+        {/* <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
               display: 'flex',
@@ -163,7 +163,7 @@ export default function Dashboard({handleLogout,gitHubId,user}) {
             <Divider sx={{ my: 1 }} />
             {secondaryListItems}
           </List>
-        </Drawer>
+        </Drawer> */}
         <Box
           component="main"
           sx={{

@@ -4,15 +4,6 @@ import { auth, provider } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent ,Typography} from '@material-ui/core';
 
-import { database } from "../../firebaseConfig";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  doc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
 
 
 // import GitHubIcon from '@material-ui/icons/GitHub'; // Import GitHub icon
@@ -26,19 +17,14 @@ const GithubAuth = ({ setUser ,setGitHubId }) => {
     signInWithPopup(auth, provider)
       .then(async (result) => {
         setUser(result.user);
+        localStorage.setItem('userLogin', JSON.stringify(result.user));
         if(result.user){
           navigate("/")
         }
          // eslint-disable-next-line no-undef
 
-
-
-
-
 // const value = collection(database, "appdata");
 // const data = await addDoc(value, result.user.uid);
-
-
         setGitHubId(result.user.uid)
         console.log("Github Id", result.user.uid);
       })
