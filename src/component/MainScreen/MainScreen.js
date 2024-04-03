@@ -12,18 +12,12 @@ import {
   getDocs,
   doc,
   deleteDoc,
-  updateDoc,
-setDoc,
-  getDoc
 } from "firebase/firestore";
-import Grid from "@mui/material/Grid";
-import EhsaanDrawScreen from "../EhsaanDraw/EhsaanDraw";
-import DocumentList from "../DocumentList/DocumentList";
 import CardList from "../CardList/CardList";
 import { AddSquare } from "iconsax-react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import EditPage from "../Edit Page/EditScreen";
-
+import { useGithub } from "../../context";
 const style = {
   position: "absolute",
   top: "50%",
@@ -36,7 +30,7 @@ const style = {
   p: 4,
 };
 
-const MainApplication = ({ handleLogout, gitHubId , user }) => {
+const MainApplication = () => {
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [scenes, setScenes] = useState([]);
@@ -44,23 +38,22 @@ const MainApplication = ({ handleLogout, gitHubId , user }) => {
   const [id, setId] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { githubId , logout} = useGithub(); 
 
-  console.log("GitMain scere",gitHubId)
+
+  console.log("GitMain scere", githubId);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   const handleCreateBoard = async () => {
-  
+    const appdataRef = collection(database, "users", `${githubId}/scenes`);
+    const newSceneData = {
+      userName1: userName,
+      scenes1: [],
+    };
+    const newSceneRef = await addDoc(appdataRef, newSceneData);
 
-const appdataRef = collection(database, "users", `${gitHubId}/scenes`);
-const newSceneData = {
- 
-  userName1: userName,
-  scenes1: []
-};
-const newSceneRef = await addDoc(appdataRef, newSceneData);
-
-console.log("New scene added with ID: ", newSceneRef.id);
+    console.log("New scene added with ID: ", newSceneRef.id);
     setId(newSceneRef.id);
     setScenes([]);
     setUserName("");
@@ -69,24 +62,24 @@ console.log("New scene added with ID: ", newSceneRef.id);
 
   useEffect(() => {
     const getData = async () => {
+      const appdataRef = collection(database, "users", `${githubId}/scenes`);
+      const docSnap = await getDocs(appdataRef);
 
-const appdataRef = collection(database, "users", `${gitHubId}/scenes`);
-const docSnap = await getDocs(appdataRef);
-
-console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
+      console.log(
+        setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      );
     };
     getData();
-  });
-
+  },[]);
 
   const handleDelete = async (id) => {
-    const deleteValue = doc(database, "users", `${gitHubId}/scenes`, id);
+    const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
     await deleteDoc(deleteValue);
   };
 
   const handleEdit = async (id, userName, scenes) => {
     let scene = [];
-    if(scenes.length > 0){
+    if (scenes.length > 0) {
       scene = JSON.parse(scenes);
     }
     navigate(`/edit/${id}`);
@@ -94,83 +87,43 @@ console.log(setValues(docSnap.docs.map((doc)=> ({ ...doc.data(),id: doc.id}))))
     setId(id);
   };
 
- 
-
   return (
-    <div>
-     <div>
-  <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-    {/* <div>Recently Modified by You</div> */}
-    <div style={{ flex: 1, textAlign: 'center' }}>
-      <h1 style={{ margin: 0 }}>Ehsaan Draw</h1>
-    </div>
-    <div>
-    <Button 
-                style={{
-                  background: "#70b1ec",
-                  border: "none",
-                  color: "#fff",
-                  width: "max-content",
-                  fontWeight:             "bold",
-                }}
-                onClick={handleLogout}
-  
-                
-              >
-                Logout
-              </Button>
-    </div>
-    <div>
-      <AddSquare onClick={handleOpen} size="32" color="#0000FF"/>
-    </div>
-  </header>
-</div>
-      {/* <EhsaanDrawScreen 
-        updateData={updateData}
-        scenes={scenes}
-      /> */}
-       {location.pathname.startsWith('/edit') && (
-        <EditPage  />
-      )}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+    <div style={{ overflowX: 'auto', overflowY: 'auto', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#3498db", padding: "10px 20px" }}>
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <h1 style={{ margin: 0, color: '#fff' }}>Ehsaan Draw</h1>
+        </div>
+        <div style={{ marginRight: '10px' }}>
+          <AddSquare onClick={handleOpen} size="32" color="#fff" />
+        </div>
+        <div>
+          <Button style={{ background: "#70b1ec", border: "none", color: "#fff", width: "max-content", fontWeight: "bold" }} onClick={logout}>
+            Logout
+          </Button>
+        </div>
+      </header>
+
+      {location.pathname.startsWith("/edit") && <EditPage />}
+
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Document Details
-          </Typography>
+          </Typography> 
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <div className="edit-container">
-              <TextField
-                label="Document Name"
-                variant="outlined"
-                fullWidth
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                style={{ marginBottom: "10px" }}
-              />
+              <TextField label="Document Name" variant="outlined" fullWidth value={userName} onChange={(e) => setUserName(e.target.value)} style={{ marginBottom: "10px" }} />
             </div>
-            
-
-            <Button
-              variant="contained"
-              onClick={handleCreateBoard}
-              style={{ backgroundColor: "#0000FF", color: "#fff" }}
-            >
+            <Button variant="contained" onClick={handleCreateBoard} style={{ backgroundColor: "#70b1ec", color: "#fff" }}>
               Create
             </Button>
           </Typography>
         </Box>
       </Modal>
-      <CardList
-        id={id}
-        values={values}
-        handleDelete={handleDelete}
-        handleEdit={handleEdit}
-      />
+
+      <div style={{ flex: 1, maxWidth: '100%', overflowX: 'auto', padding: '0 20px' }}>
+        <CardList id={id} values={values} handleDelete={handleDelete} handleEdit={handleEdit} />
+      </div>
     </div>
   );
 };
