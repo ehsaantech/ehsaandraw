@@ -1,25 +1,90 @@
 import { useParams } from "react-router-dom";
-import {useLocation} from "react-router-dom";
 import EhsaanDrawScreen from "../EhsaanDraw/EhsaanDraw";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import { database } from "../../firebaseConfig";
+import { useState, useEffect } from "react";
+import { useGithub } from "../../context";
 
 function EditPage() {
-    const { id } = useParams(); // Get the ID from the URL
-    const { state } = useLocation(); // Get the state passed from the previous page
+  const [updatedScenes, setUpdatedScenes] = useState([]);
+  const { id } = useParams();
+
   
-    // Now you have access to id, userName, and scenes
-    const { userName, scenes } = state;
+  const { githubId} = useGithub(); 
+
+  console.log("GitHubId on EditScreen",githubId);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const appdataRef = collection(database, "users", `${githubId}/scenes`);
+        const docSnap = await getDocs(appdataRef);
+        const scenesData = docSnap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        // console.log("Scenes Data", scenesData);
+        
+        const filteredScenes = scenesData.find(scene => scene.id === id);
+        setUpdatedScenes(JSON.parse(filteredScenes.scenes1));
+        // setUpdatedScenes(filteredScenes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getData();
+  },[]); 
+
+  // useEffect(() => {
   
-    // Render your edit page using the received data
-    return (
-      <div>
-        <h1>Edit Page for ID: {id}</h1>
-        <p>User Name: {userName}</p>
-        <p>Scenes: {scenes}</p>
-        {/* Now fetch EhsaanDrawScreen content based on the ID */}
-        <EhsaanDrawScreen scenes={scenes} />
-        {/* Add your edit form here */}
-      </div>
-    );
-  }
-  
-  export default MainComponent;
+  //      getData();
+  // });
+
+  // const getData = async () => {
+
+  //   console.log("getData");
+
+  //   console.log("githubId",githubId);
+
+    
+  //   console.log("id",id);
+
+    
+
+  //   const appdataRef = collection(database,"users", `${githubId}/scenes/${id}/scenes1`);
+  //   const docSnap = await getDocs(appdataRef);
+
+  //   const updatedScenesData = docSnap.docs.map((doc) => {
+  //     const data = { ...doc.data(), id: doc.id };
+  //     if (data.id === id) {
+  //       console.log("Idddddddddddd", data.id);
+  //     }
+  //     return data;
+  //   });
+
+  //   console.log("updatedScenesData", updatedScenesData);
+
+  //   setUpdatedScenes(updatedScenesData);
+  // };
+
+  const updateData = async (elements) => {
+    if (!id) {
+      window.alert("Please select a document or create a new one.");
+      return false;
+    }
+    const updateValue = doc(database, "users", `${githubId}/scenes`, id);
+    await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
+    window.alert("Document update successfully");
+    setUpdatedScenes(elements);
+  };
+
+  return (
+    <div>
+      <EhsaanDrawScreen updateData={updateData} scenes={updatedScenes} />
+    </div>
+  );
+}
+
+export default EditPage;

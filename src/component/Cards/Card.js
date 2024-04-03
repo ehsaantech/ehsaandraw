@@ -6,8 +6,7 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import styled from "styled-components";
-
-
+import ehsaanImage from "../../assets/ehsaanImage.png"
 const DataCard = ({ userName, scenes, onDelete, onEdit,drawScreenImage }) => {
 
 
@@ -117,9 +116,9 @@ const StyledParagraph = styled.p`
       <StyledContainer>
         <StyledLink>
         <StyledWrapper>
-        <StyledImage
         
-        />
+
+          {/* <StyledImage>{ehsaanImage}</StyledImage> */}
         </StyledWrapper>
 
           <StyledLinks></StyledLinks>

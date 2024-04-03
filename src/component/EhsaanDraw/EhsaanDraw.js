@@ -1,5 +1,6 @@
 import { Excalidraw } from "@excalidraw/excalidraw";
 import React, { useEffect, useState } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function EhsaanDrawScreen({updateData,scenes}) {
@@ -28,11 +29,8 @@ function EhsaanDrawScreen({updateData,scenes}) {
                   width: "max-content",
                   fontWeight: "bold",
                 }}
-                onClick={() => 
-                  {
+                onClick={() =>
                     updateData(excalidrawAPI?.getSceneElements())
-                }
-  
                 }
               >
                 Save Me
