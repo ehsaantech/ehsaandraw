@@ -115,7 +115,7 @@ const MainApplication = () => {
           <Button
             style={{
               background: "#70b1ec",
-              border: "none",
+              border: "2px solid white",
               color: "#fff",
               width: "max-content",
               fontWeight: "bold",
@@ -174,6 +174,7 @@ const MainApplication = () => {
           values={values}
           handleDelete={handleDelete}
           handleEdit={handleEdit}
+          scenes={scenes}
         />
       </div>
     </div>
