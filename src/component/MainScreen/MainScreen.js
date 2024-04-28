@@ -66,12 +66,13 @@ const MainApplication = () => {
         setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     };
     getData();
-  }, [id]);
+  },);
 
   const handleDelete = async (id) => {
     const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
     await deleteDoc(deleteValue);
   };
+
 
   const handleEdit = async (id, userName, scenes) => {
     let scene = [];

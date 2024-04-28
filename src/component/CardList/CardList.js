@@ -25,7 +25,7 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
               backgroundColor: " #fafafa"
             }}
           >
-            <h2 >{item.userName1}</h2>
+            <h4 style={{ color:"#36454F" ,font:"normal"}} >{item.userName1}</h4>
             <Button
               onClick={() => handleDelete(item.id)}
               startIcon={<DeleteIcon />}
