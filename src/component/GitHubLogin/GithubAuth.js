@@ -1,27 +1,18 @@
-import React, { useState ,useEffect } from "react";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../firebaseConfig";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import gitImage from "../../assets/gitImage.png"
-// import GitHubIcon from '@material-ui/icons/GitHub'; // Import GitHub icon
-// import githubimage from '.../assets/githubimage.png'
 import { useGithub } from "../../context";
 
 const GithubAuth = () => {
-
   const { githubId, handleGithubLogin } = useGithub(); 
-
+  
   const navigate = useNavigate()
-
-  console.log("GithubAuthScreeeeen",githubId)
-
   useEffect(()=>{
     if(githubId){
       navigate("/")
     }
   })
-
 
   return (
     <>

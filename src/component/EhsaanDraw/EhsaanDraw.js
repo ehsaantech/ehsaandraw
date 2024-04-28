@@ -1,23 +1,20 @@
 import { Excalidraw } from "@excalidraw/excalidraw";
 import React, { useEffect, useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
-
 
 function EhsaanDrawScreen({updateData,scenes}) {
 
     const [excalidrawAPI, setExcalidrawAPI] = useState(null);
 
     useEffect(() => {
-  
       excalidrawAPI?.updateScene(  {elements:scenes});
     }, [scenes,excalidrawAPI]);
 
-
     return (
       <>
-        <div style={{ height: "500px" }}>
+        <div style={{
+          height: "100vh"
+        }}>
           <Excalidraw
-  
           excalidrawAPI={(api)=> setExcalidrawAPI(api)}
           renderTopRightUI={() => {
             return (

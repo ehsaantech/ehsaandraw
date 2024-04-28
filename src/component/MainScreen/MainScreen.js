@@ -38,8 +38,7 @@ const MainApplication = () => {
   const [id, setId] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { githubId , logout} = useGithub(); 
-
+  const { githubId, logout } = useGithub();
 
   console.log("GitMain scere", githubId);
   const handleOpen = () => setOpen(true);
@@ -64,13 +63,10 @@ const MainApplication = () => {
     const getData = async () => {
       const appdataRef = collection(database, "users", `${githubId}/scenes`);
       const docSnap = await getDocs(appdataRef);
-
-      console.log(
         setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      );
     };
     getData();
-  },[]);
+  }, [id]);
 
   const handleDelete = async (id) => {
     const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
@@ -88,41 +84,97 @@ const MainApplication = () => {
   };
 
   return (
-    <div style={{ overflowX: 'auto', overflowY: 'auto', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#3498db", padding: "10px 20px" }}>
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh", // Adjust as needed
+        flexDirection: "column",
+      }}
+    >
+      <header
+        style={{
+          position: "sticky",
+          top: "0",
+          borderBottom: "1px solid white",
+          display: "flex",
+          height: "4rem", // Adjust height as needed
+          alignItems: "center",
+          gap: "1rem", // Adjust gap as needed
+          background: "#70b1ec", // Change to your background color
+          zIndex: "50",
+          padding: "0.75rem 1rem", // Adjust padding as needed
+        }}
+      >
         <div style={{ flex: 1, textAlign: "center" }}>
-          <h1 style={{ margin: 0, color: '#fff' }}>Ehsaan Draw</h1>
+          <h1 style={{ margin: 0, color: "#fff" }}>Ehsaan Draw</h1>
         </div>
-        <div style={{ marginRight: '10px' }}>
+        <div style={{ marginRight: "10px" }}>
           <AddSquare onClick={handleOpen} size="32" color="#fff" />
         </div>
         <div>
-          <Button style={{ background: "#70b1ec", border: "none", color: "#fff", width: "max-content", fontWeight: "bold" }} onClick={logout}>
+          <Button
+            style={{
+              background: "#70b1ec",
+              border: "none",
+              color: "#fff",
+              width: "max-content",
+              fontWeight: "bold",
+            }}
+            onClick={logout}
+          >
             Logout
           </Button>
         </div>
       </header>
+      <div>{location.pathname.startsWith("/edit") && <EditPage />}</div>
 
-      {location.pathname.startsWith("/edit") && <EditPage />}
-
-      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Document Details
-          </Typography> 
+          </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <div className="edit-container">
-              <TextField label="Document Name" variant="outlined" fullWidth value={userName} onChange={(e) => setUserName(e.target.value)} style={{ marginBottom: "10px" }} />
+              <TextField
+                label="Document Name"
+                variant="outlined"
+                fullWidth
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
             </div>
-            <Button variant="contained" onClick={handleCreateBoard} style={{ backgroundColor: "#70b1ec", color: "#fff" }}>
+            <Button
+              variant="contained"
+              onClick={handleCreateBoard}
+              style={{ backgroundColor: "#70b1ec", color: "#fff" }}
+            >
               Create
             </Button>
           </Typography>
         </Box>
       </Modal>
 
-      <div style={{ flex: 1, maxWidth: '100%', overflowX: 'auto', padding: '0 20px' }}>
-        <CardList id={id} values={values} handleDelete={handleDelete} handleEdit={handleEdit} />
+      <div
+        style={{
+          flex: 1,
+          maxWidth: "100%",
+          overflowX: "auto",
+          padding: "0 20px",
+          marginLeft: "10px"
+        }}
+      >
+        <CardList
+          id={id}
+          values={values}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+        />
       </div>
     </div>
   );
