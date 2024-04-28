@@ -26,6 +26,7 @@ function EditPage() {
       }
     };
     getData();
+    // eslint-disable-next-line
   }, []);
 
   const updateData = async (elements) => {

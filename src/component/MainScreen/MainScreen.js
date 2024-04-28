@@ -66,7 +66,8 @@ const MainApplication = () => {
         setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     };
     getData();
-  },);
+    // eslint-disable-next-line
+  });
 
   const handleDelete = async (id) => {
     const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
