@@ -4,6 +4,7 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { database } from "../../firebaseConfig";
 import { useState, useEffect } from "react";
 import { useGithub } from "../../context";
+import toast from "react-hot-toast";
 
 function EditPage() {
   const [updatedScenes, setUpdatedScenes] = useState([]);
@@ -31,15 +32,14 @@ function EditPage() {
 
   const updateData = async (elements) => {
     if (!id) {
-      window.alert("Please select a document or create a new one.");
+      toast.success("Please select a document or create a new one.");
       return false;
     }
     const updateValue = doc(database, "users", `${githubId}/scenes`, id);
     await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
-    window.alert("Document update successfully");
+    toast.success("Sketch saved successfully");
     setUpdatedScenes(elements);
   };
-
   return (
     <div>
       <EhsaanDrawScreen updateData={updateData} scenes={updatedScenes} />

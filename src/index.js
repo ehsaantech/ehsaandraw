@@ -4,12 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GithubProvider } from './context';
+import { Toaster } from 'react-hot-toast';
 
 ReactDOM.render(
 
   <React.StrictMode>
     <GithubProvider>
-    <App />
+      <Toaster position="top-center" />
+        <App />
     </GithubProvider>
   </React.StrictMode>,
  document.getElementById('root')

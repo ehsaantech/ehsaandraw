@@ -18,6 +18,7 @@ import { AddSquare } from "iconsax-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import EditPage from "../Edit Page/EditScreen";
 import { useGithub } from "../../context";
+import toast from "react-hot-toast";
 const style = {
   position: "absolute",
   top: "50%",
@@ -51,7 +52,7 @@ const MainApplication = () => {
       scenes1: [],
     };
     const newSceneRef = await addDoc(appdataRef, newSceneData);
-
+    toast.success("Document created successfully");
     console.log("New scene added with ID: ", newSceneRef.id);
     setId(newSceneRef.id);
     setScenes([]);
@@ -63,7 +64,7 @@ const MainApplication = () => {
     const getData = async () => {
       const appdataRef = collection(database, "users", `${githubId}/scenes`);
       const docSnap = await getDocs(appdataRef);
-        setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getData();
     // eslint-disable-next-line
@@ -73,7 +74,6 @@ const MainApplication = () => {
     const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
     await deleteDoc(deleteValue);
   };
-
 
   const handleEdit = async (id, userName, scenes) => {
     let scene = [];
@@ -97,7 +97,7 @@ const MainApplication = () => {
         style={{
           position: "sticky",
           top: "0",
-          borderBottom: "1px solid white",
+          borderBottom: "1px",
           display: "flex",
           height: "4rem", // Adjust height as needed
           alignItems: "center",
@@ -105,10 +105,13 @@ const MainApplication = () => {
           background: "#70b1ec", // Change to your background color
           zIndex: "50",
           padding: "0.75rem 1rem", // Adjust padding as needed
+          boxShadow: "5px 5px 5px gray",
         }}
       >
         <div style={{ flex: 1, textAlign: "center" }}>
-          <h1 style={{ margin: 0, color: "#fff" }}>Ehsaan Draw</h1>
+          <h1 style={{ margin: 0, color: "#fff", fontFamily: "sans-serif" }}>
+            Ehsaan Draw
+          </h1>
         </div>
         <div style={{ marginRight: "10px" }}>
           <AddSquare onClick={handleOpen} size="32" color="#fff" />
@@ -147,7 +150,12 @@ const MainApplication = () => {
                 variant="outlined"
                 fullWidth
                 value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                maxLength={40}
+                onChange={(e) => {
+                  if (e.target.value.length <= 25) {
+                    setUserName(e.target.value);
+                  }
+                }}
                 style={{ marginBottom: "10px" }}
               />
             </div>
@@ -168,7 +176,7 @@ const MainApplication = () => {
           maxWidth: "100%",
           overflowX: "auto",
           padding: "0 20px",
-          marginLeft: "10px"
+          marginLeft: "10px",
         }}
       >
         <CardList
