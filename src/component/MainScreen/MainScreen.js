@@ -37,6 +37,7 @@ const MainApplication = () => {
   const [scenes, setScenes] = useState([]);
   const [values, setValues] = useState([]);
   const [id, setId] = useState("");
+  const [deleteValue, setDeleteValue] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { githubId, logout } = useGithub();
@@ -46,6 +47,7 @@ const MainApplication = () => {
   const handleClose = () => setOpen(false);
 
   const handleCreateBoard = async () => {
+    
     const appdataRef = collection(database, "users", `${githubId}/scenes`);
     const newSceneData = {
       userName1: userName,
@@ -65,13 +67,15 @@ const MainApplication = () => {
       const appdataRef = collection(database, "users", `${githubId}/scenes`);
       const docSnap = await getDocs(appdataRef);
       setValues(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      
     };
     getData();
     // eslint-disable-next-line
-  });
+  },[id,deleteValue]);
 
   const handleDelete = async (id) => {
     const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
+    setDeleteValue(deleteValue)
     await deleteDoc(deleteValue);
   };
 
@@ -152,9 +156,9 @@ const MainApplication = () => {
                 value={userName}
                 maxLength={40}
                 onChange={(e) => {
-                  if (e.target.value.length <= 25) {
+                  // if (e.target.value.length <= 25) {
                     setUserName(e.target.value);
-                  }
+                  // }
                 }}
                 style={{ marginBottom: "10px" }}
               />
