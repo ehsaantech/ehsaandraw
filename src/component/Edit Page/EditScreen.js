@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import EhsaanDrawScreen from "../EhsaanDraw/EhsaanDraw";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc,addDoc, updateDoc } from "firebase/firestore";
 import { database } from "../../firebaseConfig";
 import { useState, useEffect } from "react";
 import { useGithub } from "../../context";
@@ -10,11 +10,13 @@ function EditPage() {
   const [updatedScenes, setUpdatedScenes] = useState([]);
   const { id } = useParams();
   const { githubId } = useGithub();
+  const [collectionUrl, setCollectionUrl] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const appdataRef = collection(database, "users", `${githubId}/scenes`);
+        setCollectionUrl(appdataRef.path)
         const docSnap = await getDocs(appdataRef);
         const scenesData = docSnap.docs.map((doc) => ({
           ...doc.data(),
@@ -30,9 +32,32 @@ function EditPage() {
     // eslint-disable-next-line
   }, []);
 
+  const shareScenesData = async () => {
+    try {
+      const appdataRef = collection(database, "share");
+      const newShareDoc = {
+        userId: githubId,
+        scenesData: updatedScenes, // Store the actual scenes data
+        sceneId: id // Store the specific scene ID
+      };
+      const docRef = await addDoc(appdataRef, newShareDoc);
+      const shareableLink = `${window.location.origin}/shared/${docRef.id}`;
+      console.log("Shareable Link: ", shareableLink);
+      navigator.clipboard.writeText(shareableLink).then(() => {
+        toast.success("Shareable link copied to clipboard!");
+      }).catch(err => {
+        console.error("Failed to copy link: ", err);
+        toast.error("Failed to copy link.");
+      });
+    } catch (error) {
+      console.error("Error sharing data:", error);
+      toast.error("Failed to share data.");
+    }
+  };
+
   const updateData = async (elements) => {
     if (!id) {
-      toast.success("Please select a document or create a new one.");
+      toast.error("Please select a document or create a new one.");
       return false;
     }
     const updateValue = doc(database, "users", `${githubId}/scenes`, id);
@@ -40,9 +65,10 @@ function EditPage() {
     toast.success("Sketch saved successfully");
     setUpdatedScenes(elements);
   };
+  
   return (
     <div>
-      <EhsaanDrawScreen updateData={updateData} scenes={updatedScenes} />
+      <EhsaanDrawScreen updateData={updateData} scenes={updatedScenes} shareScenesData={shareScenesData} />
     </div>
   );
 }

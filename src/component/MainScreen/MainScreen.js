@@ -19,6 +19,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import EditPage from "../Edit Page/EditScreen";
 import { useGithub } from "../../context";
 import toast from "react-hot-toast";
+import { useRadioGroup } from "@mui/material";
 const style = {
   position: "absolute",
   top: "50%",
@@ -36,6 +37,7 @@ const MainApplication = () => {
   const [userName, setUserName] = useState("");
   const [scenes, setScenes] = useState([]);
   const [values, setValues] = useState([]);
+  const [appData, setAppData] = useState([]);
   const [id, setId] = useState("");
   const [deleteValue, setDeleteValue] = useState("");
   const navigate = useNavigate();
@@ -49,13 +51,14 @@ const MainApplication = () => {
   const handleCreateBoard = async () => {
     
     const appdataRef = collection(database, "users", `${githubId}/scenes`);
+    setAppData(appdataRef)
     const newSceneData = {
       userName1: userName,
       scenes1: [],
     };
     const newSceneRef = await addDoc(appdataRef, newSceneData);
     toast.success("Document created successfully");
-    console.log("New scene added with ID: ", newSceneRef.id);
+    // console.log("New scene added with ID: ", newSceneRef.id);
     setId(newSceneRef.id);
     setScenes([]);
     setUserName("");
@@ -72,6 +75,7 @@ const MainApplication = () => {
     getData();
     // eslint-disable-next-line
   },[id,deleteValue]);
+
 
   const handleDelete = async (id) => {
     const deleteValue = doc(database, "users", `${githubId}/scenes`, id);
