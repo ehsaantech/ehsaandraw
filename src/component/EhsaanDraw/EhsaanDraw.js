@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import ShareIcon from "@mui/icons-material/Share";
+import toast from "react-hot-toast";
 
 function EhsaanDrawScreen({
   updateData,
@@ -17,6 +18,28 @@ function EhsaanDrawScreen({
     excalidrawAPI?.updateScene({ elements: scenes });
   }, [scenes, excalidrawAPI]);
 
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (excalidrawAPI) {
+  //       // Save the current drawing and selection state
+  //       const currentElements = excalidrawAPI.getSceneElements();
+  //       const currentAppState = excalidrawAPI.getAppState();
+
+  //       // Update the data
+  //       updateData(currentElements);
+
+  //       // Re-apply the current state to avoid losing in-progress work
+  //       excalidrawAPI.updateScene({
+  //         elements: currentElements,
+  //         appState: currentAppState,
+  //       });
+  //     }
+  //   }, 100000); // 5000 milliseconds = 5 seconds
+
+  //   // Cleanup function to clear the interval when the component unmounts
+  //   return () => clearInterval(intervalId);
+  // }, [excalidrawAPI, updateData]);
   return (
     <>
       <div
@@ -88,8 +111,10 @@ function EhsaanDrawScreen({
                         alignItems: "center",
                         justifyContent: "center",
                       }}
-                      onClick={() =>
+                      onClick={() =>{
                         updateData(excalidrawAPI?.getSceneElements())
+                        toast.success("Sketch saved successfully");
+                      }
                       }
                     >
                       Save Sketch

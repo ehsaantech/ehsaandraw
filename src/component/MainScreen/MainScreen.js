@@ -159,6 +159,11 @@ const MainApplication = () => {
                 fullWidth
                 value={userName}
                 maxLength={40}
+                onKeyDown={(e)=>{
+                  if(e.key === "Enter"){
+                    handleCreateBoard();
+                  }
+                }}
                 onChange={(e) => {
                   // if (e.target.value.length <= 25) {
                     setUserName(e.target.value);

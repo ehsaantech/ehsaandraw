@@ -48,6 +48,7 @@ function EditPage() {
       }).catch(err => {
         console.error("Failed to copy link: ", err);
         toast.error("Failed to copy link.");
+        console.log("Error: ", err);
       });
     } catch (error) {
       console.error("Error sharing data:", error);
@@ -62,7 +63,6 @@ function EditPage() {
     }
     const updateValue = doc(database, "users", `${githubId}/scenes`, id);
     await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
-    toast.success("Sketch saved successfully");
     setUpdatedScenes(elements);
   };
   
