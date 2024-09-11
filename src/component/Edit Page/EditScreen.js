@@ -34,22 +34,28 @@ function EditPage() {
 
   const shareScenesData = async () => {
     try {
+      if (!githubId) {
+        throw new Error("User ID is not available.");
+      }
+      if (!updatedScenes || updatedScenes.length === 0) {
+        throw new Error("Scenes data is empty or not initialized.");
+      }
+
       const appdataRef = collection(database, "share");
       const newShareDoc = {
         userId: githubId,
-        scenesData: updatedScenes, // Store the actual scenes data
-        sceneId: id // Store the specific scene ID
+        scenesData: updatedScenes, // Ensure this is initialized and has valid data
+        sceneId: id // Ensure this is not undefined
       };
+
+      console.log("Data to share:", newShareDoc); // Log data before sharing
+
       const docRef = await addDoc(appdataRef, newShareDoc);
       const shareableLink = `${window.location.origin}/shared/${docRef.id}`;
       console.log("Shareable Link: ", shareableLink);
-      navigator.clipboard.writeText(shareableLink).then(() => {
-        toast.success("Shareable link copied to clipboard!");
-      }).catch(err => {
-        console.error("Failed to copy link: ", err);
-        toast.error("Failed to copy link.");
-        console.log("Error: ", err);
-      });
+      
+      await navigator.clipboard.writeText(shareableLink);
+      toast.success("Shareable link copied to clipboard!");
     } catch (error) {
       console.error("Error sharing data:", error);
       toast.error("Failed to share data.");
