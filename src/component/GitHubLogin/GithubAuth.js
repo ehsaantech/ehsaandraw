@@ -1,18 +1,17 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, Typography } from "@material-ui/core";
-import gitImage from "../../assets/gitImage.png"
+import gitImage from "../../assets/gitImage.png";
 import { useGithub } from "../../context";
 
 const GithubAuth = () => {
-  const { githubId, handleGithubLogin } = useGithub(); 
-  
-  const navigate = useNavigate()
-  useEffect(()=>{
-    if(githubId){
-      navigate("/")
+  const { githubId, handleGithubLogin } = useGithub();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (githubId) {
+      navigate("/");
     }
-  })
+  });
 
   return (
     <>
@@ -24,28 +23,60 @@ const GithubAuth = () => {
           height: "100vh",
         }}
       >
-        <Card style={{ maxWidth: 300 }}>
-          <CardContent style={{ textAlign: "center" }}>
-            <Typography>Welcome to Social Login</Typography>
-            <img src={gitImage} alt="GitHub Logo" style={{ width: 80, marginBottom: 10 }} /> 
+        {/* Custom Card Container */}
+        <div
+          style={{
+            maxWidth: "300px",
+            width: "100%",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            overflow: "hidden",
+          }}
+        >
+          {/* Card Content */}
+          <div
+            style={{
+              padding: "20px",
+              textAlign: "center",
+            }}
+          >
+            <h3
+              style={{
+                margin: "0 0 20px",
+                fontSize: "16px",
+                fontFamily: "sans-serif",
+                fontWeight: "bold",
+              }}
+            >
+              Welcome to Social Login
+            </h3>
+
+            <img
+              src={gitImage}
+              alt="GitHub Logo"
+              style={{ width: "80px", marginBottom: "10px" }}
+            />
 
             <button
               style={{
-                background: "#70b1ec",
+                background: "#000000",
                 border: "none",
                 color: "#fff",
                 width: "100%",
                 fontWeight: "bold",
-                padding: "20px 40px",
-                borderRadius: 5,
+                padding: "12px",
+                borderRadius: "5px",
                 cursor: "pointer",
+                fontSize: "14px",
+                font: "sans-serif",
               }}
               onClick={handleGithubLogin}
             >
               Login With GitHub
             </button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </>
   );
