@@ -57,8 +57,8 @@ function EhsaanDrawScreen({
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      width: "100%", // Ensure the parent div has enough width to distribute space
-                      gap: "10px", // Optional: add gap for consistent spacing
+                      width: "100%",
+                      gap: "10px",
                     }}
                   >
                     <button

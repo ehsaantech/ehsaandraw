@@ -215,14 +215,14 @@ const MainApplication = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // Dim background
+            backgroundColor: "rgba(0, 0, 0, 0.5)", 
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 1000, // Ensure modal is on top
-            padding: "20px", // Add padding for smaller screens
+            zIndex: 1000, 
+            padding: "20px", 
           }}
-          onClick={handleClose} // Close modal on background click
+          onClick={handleClose} 
         >
           <div
             style={{
@@ -231,13 +231,13 @@ const MainApplication = () => {
               borderRadius: "12px",
               width: "400px",
               maxWidth: "100%",
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Improved shadow for better look
-              position: "relative", // Needed for close button positioning
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", 
+              position: "relative", 
               display: "flex",
               flexDirection: "column",
-              gap: "20px", // Consistent spacing
+              gap: "20px", 
             }}
-            onClick={(e) => e.stopPropagation()} // Prevent background click from closing modal
+            onClick={(e) => e.stopPropagation()} 
           >
             {/* Title */}
             <h2
@@ -330,7 +330,6 @@ const MainApplication = () => {
           marginLeft: "10px",
         }}
       >
-        {/* Pass filteredValues instead of values */}
         <CardList
           id={id}
           values={filteredValues}

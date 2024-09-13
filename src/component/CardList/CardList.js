@@ -7,7 +7,7 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)", // Default to 1 column for small screens
+        gridTemplateColumns: "repeat(4, 1fr)", 
         gap: "20px",
         padding: "20px",
       }}
@@ -20,17 +20,17 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
             borderRadius: "8px",
             border: "1px solid #e0e0e0",
             overflow: "hidden",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Enhanced shadow for depth
-            transition: "transform 0.3s, box-shadow 0.3s", // Smooth hover effects
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+            transition: "transform 0.3s, box-shadow 0.3s", 
             maxWidth: "100%",
             width: "100%",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-5px)"; // Lift effect on hover
+            e.currentTarget.style.transform = "translateY(-5px)"; 
             e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.15)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)"; // Reset effect on mouse leave
+            e.currentTarget.style.transform = "translateY(0)"; 
             e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
           }}
         >
@@ -52,7 +52,7 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
             >
               <div
                 style={{
-                  padding: "20px", // Padding applied to the container
+                  padding: "20px", 
                 }}
               >
                 <img
@@ -60,9 +60,9 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                   style={{
                     width: "100%",
                     height: "auto",
-                    objectFit: "cover", // Cover ensures the image covers the entire container area
+                    objectFit: "cover", 
                     borderRadius: "4px",
-                    display: "block", // Removes any default spacing from images
+                    display: "block", 
                   }}
                   alt="No pict"
                 />
@@ -81,8 +81,7 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                 style={{
                   margin: 0,
                   color: "#36454F",
-                  fontWeight: "500", // Slightly bolder text for better readability
-                  fontSize: "18px",
+                  fontWeight: "500", 
                   padding: "5px",
                 }}
               >
