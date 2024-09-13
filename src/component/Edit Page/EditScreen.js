@@ -1,6 +1,12 @@
 import { useParams } from "react-router-dom";
 import EhsaanDrawScreen from "../EhsaanDraw/EhsaanDraw";
-import { collection, getDocs, doc,addDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { database } from "../../firebaseConfig";
 import { useState, useEffect } from "react";
 import { useGithub } from "../../context";
@@ -16,7 +22,7 @@ function EditPage() {
     const getData = async () => {
       try {
         const appdataRef = collection(database, "users", `${githubId}/scenes`);
-        setCollectionUrl(appdataRef.path)
+        setCollectionUrl(appdataRef.path);
         const docSnap = await getDocs(appdataRef);
         const scenesData = docSnap.docs.map((doc) => ({
           ...doc.data(),
@@ -45,7 +51,7 @@ function EditPage() {
       const newShareDoc = {
         userId: githubId,
         scenesData: updatedScenes, // Ensure this is initialized and has valid data
-        sceneId: id // Ensure this is not undefined
+        sceneId: id, // Ensure this is not undefined
       };
 
       console.log("Data to share:", newShareDoc); // Log data before sharing
@@ -53,7 +59,7 @@ function EditPage() {
       const docRef = await addDoc(appdataRef, newShareDoc);
       const shareableLink = `${window.location.origin}/shared/${docRef.id}`;
       console.log("Shareable Link: ", shareableLink);
-      
+
       await navigator.clipboard.writeText(shareableLink);
       toast.success("Shareable link copied to clipboard!");
     } catch (error) {
@@ -71,10 +77,14 @@ function EditPage() {
     await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
     setUpdatedScenes(elements);
   };
-  
+
   return (
     <div>
-      <EhsaanDrawScreen updateData={updateData} scenes={updatedScenes} shareScenesData={shareScenesData} />
+      <EhsaanDrawScreen
+        updateData={updateData}
+        scenes={updatedScenes}
+        shareScenesData={shareScenesData}
+      />
     </div>
   );
 }

@@ -8,11 +8,9 @@ const GithubContext = createContext();
 
 const GithubProvider = ({ children }) => {
   const [githubId, setGithubId] = useState(() => {
-    // Initialize the state with the value from localStorage if available
     const storedId = localStorage.getItem("github_Id");
     return storedId ? JSON.parse(storedId) : null;
   }); 
-  // const navigate = useNavigate()
   
   const handleGithubLogin = async () => {
     try {

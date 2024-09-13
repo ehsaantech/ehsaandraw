@@ -1,9 +1,9 @@
 import { Excalidraw } from "@excalidraw/excalidraw";
 import React, { useEffect, useState } from "react";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
-import ShareIcon from "@mui/icons-material/Share";
 import toast from "react-hot-toast";
+import { ArrowLeft } from "lucide-react";
+import { Share2 } from "lucide-react";
 
 function EhsaanDrawScreen({
   updateData,
@@ -17,7 +17,6 @@ function EhsaanDrawScreen({
   useEffect(() => {
     excalidrawAPI?.updateScene({ elements: scenes });
   }, [scenes, excalidrawAPI]);
-
 
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
@@ -58,64 +57,79 @@ function EhsaanDrawScreen({
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      width: "100%", // Ensure the parent div has enough width to distribute space
-                      gap: "10px", // Optional: add gap for consistent spacing
+                      width: "100%",
+                      gap: "10px",
                     }}
                   >
                     <button
-                      style={{
-                        padding: "2px",
+                       style={{
+                        // padding: "2px",
                         borderRadius: "5px",
-                        background: "#70b1ec",
-                        border: "none",
-                        color: "#fff",
-                        height: "45px",
-
-                        width: "45px",
+                        background: "#fff",
+                        border: "3px solid black",
+                        color: "#000000",
+                        width: "50px",
+                        height: "37px",
                         fontWeight: "bold",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                        transition: "border-color 0.3s, box-shadow 0.3s",
+                        cursor: "pointer",
+                        outline: "none",
+                        marginLeft: "10px",
                       }}
                       onClick={() => navigate("/")}
                     >
-                      <ArrowBackIcon />
+                      <ArrowLeft />
                     </button>
                     <button
-                      style={{
-                        padding: "6px",
+                       style={{
+                        // padding: "2px",
                         borderRadius: "5px",
-                        background: "#70b1ec",
-                        border: "none",
-                        width: "45px",
-                        height: "45px",
-
-                        color: "#fff",
-                        fontWeight: "bold",
-                      }}
-                      onClick={shareScenesData}
-                    >
-                      <ShareIcon />
-                    </button>
-                    <button
-                      style={{
-                        padding: "2px",
-                        borderRadius: "5px",
-                        background: "#70b1ec",
-                        border: "none",
-                        color: "#fff",
-                        width: "100px",
-                        height: "45px",
+                        background: "#fff",
+                        border: "3px solid black",
+                        color: "#000000",
+                        width: "50px",
+                        height: "37px",
                         fontWeight: "bold",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                        transition: "border-color 0.3s, box-shadow 0.3s",
+                        cursor: "pointer",
+                        outline: "none",
+                        marginLeft: "10px",
                       }}
-                      onClick={() =>{
-                        updateData(excalidrawAPI?.getSceneElements())
+                      onClick={shareScenesData}
+                    >
+                      <Share2 />
+                    </button>
+                    <button
+                       style={{
+                        // padding: "2px",
+                        borderRadius: "5px",
+                        background: "#000000",
+                        // border: "3px solid black",
+                        color: "#fff",
+                        width: "100px",
+                        height: "37px",
+                        fontWeight: "bold",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                        transition: "border-color 0.3s, box-shadow 0.3s",
+                        cursor: "pointer",
+                        outline: "none",
+                        marginLeft: "10px",
+                      }}
+                      onClick={() => {
+                        updateData(excalidrawAPI?.getSceneElements());
                         toast.success("Sketch saved successfully");
-                      }
-                      }
+                      }}
                     >
                       Save Sketch
                     </button>
