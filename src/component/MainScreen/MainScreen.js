@@ -13,8 +13,13 @@ import EditPage from "../Edit Page/EditScreen";
 import { useGithub } from "../../context";
 import toast from "react-hot-toast";
 import { SquarePlus } from "lucide-react";
+import SkeletonGrid from "../Skeleton/Skeleton";
+
+
+import '../../App.css'
 
 const MainApplication = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [scenes, setScenes] = useState([]);
@@ -50,12 +55,14 @@ const MainApplication = () => {
 
   useEffect(() => {
     const getData = async () => {
+      setIsLoading(true);
       const appdataRef = collection(database, "users", `${githubId}/scenes`);
       const docSnap = await getDocs(appdataRef);
       const fetchedValues = docSnap.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
+      setIsLoading(false);
       setValues(fetchedValues);
       setFilteredValues(fetchedValues); // Initialize filtered data
     };
@@ -116,18 +123,18 @@ const MainApplication = () => {
             color: "#fff",
           }}
         >
-          <h1
+          <h1 class = "ehsaandraw"
             style={{
               marginLeft: "70px",
               color: "#000", // Set text color to white for a dark background
-              textShadow: "2px 2px 8px #444", // Subtle shadow effect for better readability
+              // textShadow: "2px 2px 8px #444", // Subtle shadow effect for better readability
               fontSize: "3rem", // Increase text size for emphasis
               fontWeight: "bold", // Bold font for better visibility
               letterSpacing: "2px", // Adds spacing between letters for a clean look
               margin:0
             }}
           >
-            Ehsaan Draw
+            EhsaanDraw
           </h1>
         </div>
         <div
@@ -330,13 +337,14 @@ const MainApplication = () => {
           marginLeft: "10px",
         }}
       >
+      {isLoading ? <SkeletonGrid /> :
         <CardList
           id={id}
           values={filteredValues}
           handleDelete={handleDelete}
           handleEdit={handleEdit}
           scenes={scenes}
-        />
+        /> }
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import React from "react";
 import EhsaanDrawPicture from "../../assets/EhsaanDrawPicture.png";
 import { Trash2 } from "lucide-react";
-
+import ExcaliDrawCard from "../ExcalidrawCard/ExcaliDrawCard";
 const CardList = ({ values, handleDelete, handleEdit, id }) => {
+  
   return (
     <div
       style={{
@@ -55,6 +56,7 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                   padding: "20px", 
                 }}
               >
+                <ExcaliDrawCard key={item.id} sceneData={item.scenes1} />
                 <img
                   src={EhsaanDrawPicture}
                   style={{
