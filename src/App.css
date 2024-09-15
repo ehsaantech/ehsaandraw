@@ -7,11 +7,6 @@
   pointer-events: none;
 }
 
-@font-face {
-  font-family: 'Virgil';
-  src: url('https://excalidraw.com/Virgil.woff2') format('woff2');
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -40,106 +35,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.skeleton-card {
-  background-color: #fff;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  max-width: 100%;
-  width: 100%;
-}
-
-.skeleton-card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.skeleton-card-image {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-  display: block;
-  height: 150px;
-  background-color: #ccc;
-  margin-bottom: 10px;
-  animation: skeleton-line 1.5s infinite;
-}
-
-.skeleton-card-description {
-  width: 100%;
-  height: 40px;
-  background-color: #ccc;
-  border-radius: 5px;
-  animation: skeleton-line 1.5s infinite;
-}
-
-@keyframes skeleton-line {
-  0% {
-    background-position: left;
-  }
-  100% {
-    background-position: right;
-  }
-}
-
-.skeleton-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Adjust the number of columns as needed */
-  grid-gap: 20px;
-  padding: 20px;
-}
-
-/* Skeleton Text */
-.skeleton-card-text {
-  width: 80%;
-  height: 20px;
-  background-color: #ddd;
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  color: #36454F;
-  font-weight: 500;
-  padding: 5px;
-}
-
-/* Animation to make skeleton "run" (pulse effect) */
-.skeleton-image::before,
-.skeleton-card-description::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  animation: loading 2.0s infinite;
-}
-
-/* Keyframes for pulsing animation */
-@keyframes loading {
-  0% {
-    left: -100%;
-  }
-  50% {
-    left: 0;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
-.ehsaandraw {
-  font-family: 'Cascadia', sans-serif;
-  font-size: 24px;
 }
