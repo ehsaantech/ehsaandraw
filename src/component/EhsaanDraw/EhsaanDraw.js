@@ -1,44 +1,81 @@
-import { Excalidraw } from "@excalidraw/excalidraw";
+import { Excalidraw, THEME } from "@excalidraw/excalidraw";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { ArrowLeft } from "lucide-react";
-import { Share2 } from "lucide-react";
+import { ArrowLeft, Sun, Moon, Share2 } from "lucide-react";
 
 function EhsaanDrawScreen({
   updateData,
   scenes,
   shareScenesData,
   readOnly = false,
+  isSaving
 }) {
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
+  const [theme, setTheme] = useState(THEME.LIGHT); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    excalidrawAPI?.updateScene({ elements: scenes });
+    const savedTheme = localStorage.getItem('theme') || THEME.LIGHT;
+    setTheme(savedTheme);
+
+    if (excalidrawAPI) {
+      excalidrawAPI.updateScene({ elements: scenes });
+    }
   }, [scenes, excalidrawAPI]);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     if (excalidrawAPI) {
-  //       // Save the current drawing and selection state
-  //       const currentElements = excalidrawAPI.getSceneElements();
-  //       const currentAppState = excalidrawAPI.getAppState();
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT;
+      if (excalidrawAPI) {
+        excalidrawAPI.updateScene({
+          appState: { theme: newTheme },
+        });
+      }
+      // Save the selected theme to localStorage
+      localStorage.setItem('theme', newTheme);
+      return newTheme;
+    });
+  };
 
-  //       // Update the data
-  //       updateData(currentElements);
+  const handleSave = () => {
+    if (excalidrawAPI) {
+      updateData(excalidrawAPI.getSceneElements());
+      toast.success("Sketch saved successfully");
+    }
+  };
 
-  //       // Re-apply the current state to avoid losing in-progress work
-  //       excalidrawAPI.updateScene({
-  //         elements: currentElements,
-  //         appState: currentAppState,
-  //       });
-  //     }
-  //   }, 100000); // 5000 milliseconds = 5 seconds
+  const handleBack = () => {
+    navigate("/");
+  };
 
-  //   // Cleanup function to clear the interval when the component unmounts
-  //   return () => clearInterval(intervalId);
-  // }, [excalidrawAPI, updateData]);
+  const buttonStyles = {
+    borderRadius: "5px",
+    width: "50px",
+    height: "37px",
+    fontWeight: "bold",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    transition: "border-color 0.3s, box-shadow 0.3s",
+    cursor: "pointer",
+    outline: "none",
+    marginLeft: "10px",
+  };
+
+  const lightThemeStyles = {
+    background: "#fff",
+    border: "3px solid black",
+    color: "#000000",
+  };
+
+  const darkThemeStyles = {
+    background: "#232329",
+    border: "3px solid #232329",
+    color: "#E3E3E8",
+  };
+
   return (
     <>
       <div
@@ -48,6 +85,12 @@ function EhsaanDrawScreen({
       >
         <Excalidraw
           excalidrawAPI={(api) => setExcalidrawAPI(api)}
+          initialData={{
+            appState: {
+              theme,
+            },
+            elements: scenes,
+          }}
           renderTopRightUI={() => {
             return (
               <>
@@ -62,76 +105,46 @@ function EhsaanDrawScreen({
                     }}
                   >
                     <button
-                       style={{
-                        // padding: "2px",
-                        borderRadius: "5px",
-                        background: "#fff",
-                        border: "3px solid black",
-                        color: "#000000",
-                        width: "50px",
-                        height: "37px",
-                        fontWeight: "bold",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                        transition: "border-color 0.3s, box-shadow 0.3s",
-                        cursor: "pointer",
-                        outline: "none",
-                        marginLeft: "10px",
+                      style={{
+                        ...buttonStyles,
+                        ...(theme === THEME.LIGHT ? lightThemeStyles : darkThemeStyles),
                       }}
-                      onClick={() => navigate("/")}
+                      onClick={handleBack}
                     >
                       <ArrowLeft />
                     </button>
                     <button
-                       style={{
-                        // padding: "2px",
-                        borderRadius: "5px",
-                        background: "#fff",
-                        border: "3px solid black",
-                        color: "#000000",
-                        width: "50px",
-                        height: "37px",
-                        fontWeight: "bold",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                        transition: "border-color 0.3s, box-shadow 0.3s",
-                        cursor: "pointer",
-                        outline: "none",
-                        marginLeft: "10px",
+                      style={{
+                        ...buttonStyles,
+                        ...(theme === THEME.LIGHT ? lightThemeStyles : darkThemeStyles),
                       }}
                       onClick={shareScenesData}
                     >
                       <Share2 />
                     </button>
                     <button
-                       style={{
-                        // padding: "2px",
-                        borderRadius: "5px",
-                        background: "#000000",
-                        // border: "3px solid black",
-                        color: "#fff",
-                        width: "100px",
-                        height: "37px",
-                        fontWeight: "bold",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                        transition: "border-color 0.3s, box-shadow 0.3s",
-                        cursor: "pointer",
-                        outline: "none",
-                        marginLeft: "10px",
+                      style={{
+                        ...buttonStyles,
+                        background: theme === THEME.LIGHT ? "#000000" : "#232329",
+                        border: theme === THEME.LIGHT ? "3px solid #232329" : "3px solid #232329",
+                        color: theme === THEME.LIGHT ? "#fff" : "#E3E3E8",
+                        width: "105px",
                       }}
-                      onClick={() => {
-                        updateData(excalidrawAPI?.getSceneElements());
-                        toast.success("Sketch saved successfully");
-                      }}
+                      disabled={isSaving}
+                      onClick={handleSave}
                     >
-                      Save Sketch
+                      {isSaving ? "...Saving" : "Save Sketch"}
+                    </button>
+                    <button
+                      style={{
+                        ...buttonStyles,
+                        background: theme === THEME.LIGHT ? "#fff" : "#232329",
+                        border: theme === THEME.LIGHT ? "3px solid #232329" : "3px solid #232329",
+                        color: theme === THEME.LIGHT ? "#232329" : "#E3E3E8",
+                      }}
+                      onClick={toggleTheme}
+                    >
+                      {theme === THEME.LIGHT ? <Moon /> : <Sun />}
                     </button>
                   </div>
                 )}
