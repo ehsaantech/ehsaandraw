@@ -45,7 +45,8 @@ const GithubAuth = () => {
               style={{
                 margin: "0 0 20px",
                 fontSize: "16px",
-                fontFamily: "sans-serif",
+                fontFamily: 'Cascadia, sans-serif',
+
                 fontWeight: "bold",
               }}
             >
@@ -69,7 +70,8 @@ const GithubAuth = () => {
                 borderRadius: "5px",
                 cursor: "pointer",
                 fontSize: "14px",
-                font: "sans-serif",
+                fontFamily: 'Cascadia, sans-serif',
+
               }}
               onClick={handleGithubLogin}
             >

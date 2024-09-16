@@ -6,6 +6,7 @@ import {
   getDocs,
   doc,
   deleteDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import CardList from "../CardList/CardList";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -14,9 +15,8 @@ import { useGithub } from "../../context";
 import toast from "react-hot-toast";
 import { SquarePlus } from "lucide-react";
 import SkeletonGrid from "../Skeleton/Skeleton";
-
-
-import '../../App.css'
+import { Search } from 'lucide-react';
+import "../../App.css";
 
 const MainApplication = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,33 +24,54 @@ const MainApplication = () => {
   const [userName, setUserName] = useState("");
   const [scenes, setScenes] = useState([]);
   const [values, setValues] = useState([]);
-  const [filteredValues, setFilteredValues] = useState([]); // State for filtered data
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [filteredValues, setFilteredValues] = useState([]); 
+  const [searchQuery, setSearchQuery] = useState("");
   const [id, setId] = useState("");
   const [deleteValue, setDeleteValue] = useState("");
+  const [error, setError] = useState(false); 
+  const [openSearch, setOpenSearch] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { githubId, logout } = useGithub();
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleCreateBoard = async () => {
-    const appdataRef = collection(database, "users", `${githubId}/scenes`);
-
-    const newSceneData = {
-      userName1: userName,
-      scenes1: [],
-    };
-
-    const newSceneRef = await addDoc(appdataRef, newSceneData);
-    toast.success("Document created successfully");
-
-    setId(newSceneRef.id);
-    setScenes([]);
-    setUserName("");
-    handleClose();
+  const handleClose = () => {
     setOpen(false);
+    setError(false);
+  };
+  const handleCreateBoard = async () => {
+    if (!userName.trim()) {
+      setError(true);
+      return;
+    }
+
+    setIsCreating(true); 
+
+    try {
+      const appdataRef = collection(database, "users", `${githubId}/scenes`);
+
+      const newSceneData = {
+        userName1: userName,
+        scenes1: [],
+        createdAt: serverTimestamp(),
+      };
+
+      const newSceneRef = await addDoc(appdataRef, newSceneData);
+      toast.success("Document created successfully");
+      setError(false);
+      setId(newSceneRef.id);
+      setScenes([]);
+      setUserName("");
+      handleClose();
+      setOpen(false);
+    } catch (error) {
+      console.error("Error creating document:", error);
+      toast.error("Failed to create document.");
+    } finally {
+      setIsCreating(false); // Re-enable the button after the process
+    }
   };
 
   useEffect(() => {
@@ -64,17 +85,16 @@ const MainApplication = () => {
       }));
       setIsLoading(false);
       setValues(fetchedValues);
-      setFilteredValues(fetchedValues); // Initialize filtered data
+      setFilteredValues(fetchedValues); 
     };
     getData();
     // eslint-disable-next-line
   }, [id, deleteValue]);
 
-  // Filter function to handle search
   const handleSearch = (query) => {
     setSearchQuery(query);
     const filtered = values.filter(
-      (item) => item.userName1.toLowerCase().includes(query.toLowerCase()) // Adjust this field as needed
+      (item) => item.userName1.toLowerCase().includes(query.toLowerCase()) 
     );
     setFilteredValues(filtered);
   };
@@ -103,86 +123,72 @@ const MainApplication = () => {
         style={{
           position: "sticky",
           top: "0",
-          borderBottom: "1px",
+          borderBottom: "1px solid #ccc",
           display: "flex",
           height: "4rem",
           alignItems: "center",
-          gap: "1rem",
+          justifyContent: "center", 
           background: "#fff",
           zIndex: "50",
           padding: "0.75rem 1rem",
           boxShadow: "5px 5px 5px gray",
         }}
       >
-        <div
+        <h1
+          className="ehsaandraw"
           style={{
-            flex: 1,
-            textAlign: "center",
-            marginLeft: "200px",
-            backgroundColor: "#fff",
-            color: "#fff",
+            color: "#000",
+            fontSize: "3rem",
+            fontWeight: "bold",
+            letterSpacing: "2px",
+            margin: 0,
           }}
         >
-          <h1 class = "ehsaandraw"
-            style={{
-              marginLeft: "70px",
-              color: "#000", // Set text color to white for a dark background
-              // textShadow: "2px 2px 8px #444", // Subtle shadow effect for better readability
-              fontSize: "3rem", // Increase text size for emphasis
-              fontWeight: "bold", // Bold font for better visibility
-              letterSpacing: "2px", // Adds spacing between letters for a clean look
-              margin:0
-            }}
-          >
-            EhsaanDraw
-          </h1>
-        </div>
-        <div
-          style={{
-            margin: "20px",
-            textAlign: "center",
-            // background: "#fff",
-            // padding: "10px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            marginRight: "40px",
-          }}
-        >
-          <input
-            placeholder="Search Document" // Added placeholder
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px 16px",
-              fontSize: "16px",
-              border: "2px solid #ccc",
-              borderRadius: "8px",
-              outline: "none",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "#ffff")} // Focus effect
-            onBlur={(e) => (e.target.style.borderColor = "#ccc")} // Blur effect
-          />
-        </div>
+          EhsaanDraw
+        </h1>
 
+        {/* Search and Icons */}
         <div
           style={{
-            marginRight: "10px",
-            alignContent: "center",
-            textAlign: "center",
-            marginTop: "4px",
+            position: "absolute", 
+            right: "1rem", 
+            display: "flex",
+            alignItems: "center",
           }}
         >
+          {openSearch && (
+            <input
+              placeholder="Search Document"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{
+                width: "250px", 
+                padding: "8px",
+                height: "24px",
+                fontSize: "16px",
+                border: "2px solid #ccc",
+                borderRadius: "8px",
+                outline: "none",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+                marginRight: "5px",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#000")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          )}
+          <Search
+            size={34}
+            style={{ cursor: "pointer" }}
+            onClick={() => setOpenSearch(!openSearch)}
+          />
           <SquarePlus
             onClick={handleOpen}
             size="42"
             color="#000000"
             strokeWidth={"1.3px"}
+            style={{ marginLeft: "15px", cursor: "pointer" }}
           />
-        </div>
-        <div>
           <button
             style={{
               borderRadius: "5px",
@@ -199,9 +205,9 @@ const MainApplication = () => {
               transition: "border-color 0.3s, box-shadow 0.3s",
               cursor: "pointer",
               outline: "none",
-              marginLeft: "10px",
+              marginLeft: "15px",
               fontSize: "16px",
-
+              fontFamily: "Cascadia, sans-serif",
             }}
             onClick={logout}
           >
@@ -209,7 +215,6 @@ const MainApplication = () => {
           </button>
         </div>
       </header>
-
       {/* Search Input */}
 
       <div>{location.pathname.startsWith("/edit") && <EditPage />}</div>
@@ -222,14 +227,14 @@ const MainApplication = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 1000, 
-            padding: "20px", 
+            zIndex: 1000,
+            padding: "20px",
           }}
-          onClick={handleClose} 
+          onClick={handleClose}
         >
           <div
             style={{
@@ -238,13 +243,13 @@ const MainApplication = () => {
               borderRadius: "12px",
               width: "400px",
               maxWidth: "100%",
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", 
-              position: "relative", 
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+              position: "relative",
               display: "flex",
               flexDirection: "column",
-              gap: "20px", 
+              gap: "20px",
             }}
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Title */}
             <h2
@@ -261,7 +266,10 @@ const MainApplication = () => {
 
             {/* Content */}
             <div>
-              <div className="edit-container">
+              <div
+                className="edit-container"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
                 <input
                   type="text"
                   placeholder="Document Name"
@@ -272,16 +280,35 @@ const MainApplication = () => {
                       handleCreateBoard();
                     }
                   }}
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e) => {
+                    setUserName(e.target.value);
+                    if (error) {
+                      setError(false);
+                    }
+                  }}
                   style={{
                     width: "93%",
                     padding: "12px",
-                    marginBottom: "20px",
                     borderRadius: "8px",
-                    border: "1px solid #ccc",
                     fontSize: "16px",
+                    border: error ? "2px solid red" : "1px solid #ccc", 
+                    marginBottom: "0", 
                   }}
+                  required
                 />
+                {error && (
+                  <p
+                    style={{
+                      color: "red",
+                      fontSize: "12px",
+                      margin: "0",
+                      marginBottom: "8px",
+                      marginTop: "2px",
+                    }}
+                  >
+                    Document name is required
+                  </p>
+                )}
               </div>
               <button
                 onClick={handleCreateBoard}
@@ -296,11 +323,21 @@ const MainApplication = () => {
                   fontSize: "16px",
                   fontWeight: "bold",
                   transition: "background-color 0.3s",
+                  marginTop: "25px",
                 }}
-                onMouseEnter={(e) => (e.target.style.backgroundColor = "#333")}
-                onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
+                onMouseEnter={(e) => {
+                  if (!isCreating) {
+                    e.target.style.backgroundColor = "#333";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isCreating) {
+                    e.target.style.backgroundColor = "#000";
+                  }
+                }}
+                disabled={isCreating}
               >
-                Create
+                {isCreating ? "Creating..." : "Create"}{" "}
               </button>
             </div>
 
@@ -337,14 +374,17 @@ const MainApplication = () => {
           marginLeft: "10px",
         }}
       >
-      {isLoading ? <SkeletonGrid /> :
-        <CardList
-          id={id}
-          values={filteredValues}
-          handleDelete={handleDelete}
-          handleEdit={handleEdit}
-          scenes={scenes}
-        /> }
+        {isLoading ? (
+          <SkeletonGrid />
+        ) : (
+          <CardList
+            id={id}
+            values={filteredValues}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+            scenes={scenes}
+          />
+        )}
       </div>
     </div>
   );

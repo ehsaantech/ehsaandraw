@@ -12,11 +12,13 @@ import { useState, useEffect } from "react";
 import { useGithub } from "../../context";
 import toast from "react-hot-toast";
 
+
 function EditPage() {
   const [updatedScenes, setUpdatedScenes] = useState([]);
   const { id } = useParams();
   const { githubId } = useGithub();
   const [collectionUrl, setCollectionUrl] = useState(null);
+  const [isSaving, setIsSaving] = useState(false); // Add state for button
 
   useEffect(() => {
     const getData = async () => {
@@ -50,8 +52,8 @@ function EditPage() {
       const appdataRef = collection(database, "share");
       const newShareDoc = {
         userId: githubId,
-        scenesData: updatedScenes, // Ensure this is initialized and has valid data
-        sceneId: id, // Ensure this is not undefined
+        scenesData: updatedScenes,
+        sceneId: id, 
       };
 
       console.log("Data to share:", newShareDoc); // Log data before sharing
@@ -73,9 +75,17 @@ function EditPage() {
       toast.error("Please select a document or create a new one.");
       return false;
     }
-    const updateValue = doc(database, "users", `${githubId}/scenes`, id);
-    await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
-    setUpdatedScenes(elements);
+    setIsSaving(true); 
+    try {
+      const updateValue = doc(database, "users", `${githubId}/scenes`, id);
+      await updateDoc(updateValue, { scenes1: JSON.stringify(elements) });
+      setUpdatedScenes(elements);
+    } catch (error) {
+      console.error("Error saving sketch:", error);
+      toast.error("Failed to save sketch.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -84,6 +94,7 @@ function EditPage() {
         updateData={updateData}
         scenes={updatedScenes}
         shareScenesData={shareScenesData}
+        isSaving={isSaving}
       />
     </div>
   );
