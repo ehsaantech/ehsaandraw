@@ -8,9 +8,10 @@ import {
 import SharedPage from "./component/SharedPage/SharedPage";
 import { useGithub } from "./context";
 import { database } from "./firebaseConfig";
+import { ThemeProvider } from "./ThemeContext";
 
 const MainApplication = React.lazy(() =>
-  import("./component/MainScreen/MainScreen")
+  import("./component/MainScreen/LandingScreen")
 );
 const GithubAuth = React.lazy(() =>
   import("./component/GitHubLogin/GithubAuth")
@@ -22,6 +23,7 @@ function App() {
 
   return (
     <>
+    <ThemeProvider>
       <Router>
         <Routes>
           <Route
@@ -43,7 +45,7 @@ function App() {
           <Route
             path="/edit/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<div style={{display:"flex",alignContent:"center",justifyContent:"center", marginTop:"auto",marginBottom:"auto"}}>Loading...</div>}>
                 <EditPage />
               </Suspense>
             }
@@ -54,6 +56,7 @@ function App() {
           />
         </Routes>
       </Router>
+      </ThemeProvider>
     </>
   );
 }

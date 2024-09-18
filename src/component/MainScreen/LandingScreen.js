@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { database } from "../../firebaseConfig";
 import {
   addDoc,
@@ -13,12 +13,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import EditPage from "../Edit Page/EditScreen";
 import { useGithub } from "../../context";
 import toast from "react-hot-toast";
-import { SquarePlus } from "lucide-react";
+import { SquarePlus, Search } from "lucide-react";
 import SkeletonGrid from "../Skeleton/Skeleton";
-import { Search } from 'lucide-react';
 import "../../App.css";
+import { ThemeContext } from "../../ThemeContext";
 
-const MainApplication = () => {
+const LandingScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState("");
@@ -31,6 +31,37 @@ const MainApplication = () => {
   const [error, setError] = useState(false); 
   const [openSearch, setOpenSearch] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const { theme } = useContext(ThemeContext); 
+
+  const headerStyles = {
+    position: "sticky",
+    top: "0",
+    borderBottom: theme ==="dark" ? "1px solid #444" : "1px solid #ccc",
+    display: "flex",
+    height: "4rem",
+    alignItems: "center",
+    justifyContent: "center",
+    background: theme ==="dark" ? "#121212" : "#fff", 
+    zIndex: "50",
+    padding: "0.75rem 1rem",
+    boxShadow: theme ==="dark" ? "5px 5px 5px #000" :"5px 5px 5px gray",
+  };
+
+  const inputStyles = {
+    background: theme ==="dark" ? "#333" : "#fff",
+    color: theme ==="dark" ? "#eee" : "#000", 
+    border: theme ==="dark" ? "2px solid #555" : "2px solid #ccc", 
+    outline: "none",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    transition: "border-color 0.3s, box-shadow 0.3s",
+    marginRight: "5px",
+  };
+
+  const buttonStyles = {
+    background: theme ==="dark" ? "#121212" : "#fff",
+    color: theme ==="dark" ? "#fff" : "#000",
+    border: theme ==="dark" ? "2px solid #fff" : "3px solid black",
+  };
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,7 +101,7 @@ const MainApplication = () => {
       console.error("Error creating document:", error);
       toast.error("Failed to create document.");
     } finally {
-      setIsCreating(false); // Re-enable the button after the process
+      setIsCreating(false); 
     }
   };
 
@@ -117,27 +148,19 @@ const MainApplication = () => {
 
   return (
     <div
-      style={{ display: "flex", minHeight: "100vh", flexDirection: "column" }}
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        flexDirection: "column",
+        background: theme ==="dark" ? "#121212" : "#fff", 
+        color: theme ==="dark" ? "#eee" : "#000", 
+      }}
     >
-      <header
-        style={{
-          position: "sticky",
-          top: "0",
-          borderBottom: "1px solid #ccc",
-          display: "flex",
-          height: "4rem",
-          alignItems: "center",
-          justifyContent: "center", 
-          background: "#fff",
-          zIndex: "50",
-          padding: "0.75rem 1rem",
-          boxShadow: "5px 5px 5px gray",
-        }}
-      >
+      <header style={headerStyles}>
         <h1
           className="ehsaandraw"
           style={{
-            color: "#000",
+            color: theme ==="dark" ? "#fff" : "#000",
             fontSize: "3rem",
             fontWeight: "bold",
             letterSpacing: "2px",
@@ -150,8 +173,8 @@ const MainApplication = () => {
         {/* Search and Icons */}
         <div
           style={{
-            position: "absolute", 
-            right: "1rem", 
+            position: "absolute",
+            right: "1rem",
             display: "flex",
             alignItems: "center",
           }}
@@ -162,39 +185,33 @@ const MainApplication = () => {
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               style={{
-                width: "250px", 
+                ...inputStyles,
+                width: "250px",
                 padding: "8px",
                 height: "24px",
                 fontSize: "16px",
-                border: "2px solid #ccc",
                 borderRadius: "8px",
-                outline: "none",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                transition: "border-color 0.3s, box-shadow 0.3s",
-                marginRight: "5px",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#000")}
-              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+              onBlur={(e) => (e.target.style.borderColor = theme ==="dark" ? "#555" : "#ccc")}
             />
           )}
           <Search
             size={34}
+            color={theme ==="dark" ? "#fff" : "#000"}
             style={{ cursor: "pointer" }}
             onClick={() => setOpenSearch(!openSearch)}
           />
           <SquarePlus
             onClick={handleOpen}
             size="42"
-            color="#000000"
+            color={theme ==="dark" ? "#fff" : "#000"}
             strokeWidth={"1.3px"}
             style={{ marginLeft: "15px", cursor: "pointer" }}
           />
           <button
             style={{
-              borderRadius: "5px",
-              background: "#fff",
-              border: "3px solid black",
-              color: "#000000",
+              ...buttonStyles,
               width: "100px",
               height: "37px",
               fontWeight: "bold",
@@ -202,12 +219,13 @@ const MainApplication = () => {
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              transition: "border-color 0.3s, box-shadow 0.3s",
               cursor: "pointer",
               outline: "none",
               marginLeft: "15px",
               fontSize: "16px",
               fontFamily: "Cascadia, sans-serif",
+              borderRadius: "4px",
+              borderWidth: "2.3px",
             }}
             onClick={logout}
           >
@@ -215,10 +233,11 @@ const MainApplication = () => {
           </button>
         </div>
       </header>
-      {/* Search Input */}
 
+      {/* Content */}
       <div>{location.pathname.startsWith("/edit") && <EditPage />}</div>
 
+      {/* Modal */}
       {open && (
         <div
           style={{
@@ -238,7 +257,7 @@ const MainApplication = () => {
         >
           <div
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: theme ==="dark" ? "#232329":"#fff",
               padding: "30px",
               borderRadius: "12px",
               width: "400px",
@@ -313,8 +332,8 @@ const MainApplication = () => {
               <button
                 onClick={handleCreateBoard}
                 style={{
-                  backgroundColor: "#000000",
-                  color: "#fff",
+                  backgroundColor: theme === "dark" ? "#000":"#000",
+                  color: theme ==="dark" ? "#fff" :"#fff",
                   border: "none",
                   padding: "12px 20px",
                   borderRadius: "8px",
@@ -324,16 +343,6 @@ const MainApplication = () => {
                   fontWeight: "bold",
                   transition: "background-color 0.3s",
                   marginTop: "25px",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCreating) {
-                    e.target.style.backgroundColor = "#333";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCreating) {
-                    e.target.style.backgroundColor = "#000";
-                  }
                 }}
                 disabled={isCreating}
               >
@@ -356,8 +365,8 @@ const MainApplication = () => {
                 color: "#aaa",
                 transition: "color 0.3s",
               }}
-              onMouseEnter={(e) => (e.target.style.color = "#000")}
-              onMouseLeave={(e) => (e.target.style.color = "#aaa")}
+              onMouseEnter={(e) => (e.target.style.color = theme ==="dark" ? "#fff" : "#000")}
+              onMouseLeave={(e) => (e.target.style.color = theme ==="dark" ? "#fff" : "#000")}
             >
               &times;
             </button>
@@ -365,24 +374,18 @@ const MainApplication = () => {
         </div>
       )}
 
-      <div
-        style={{
-          flex: 1,
-          maxWidth: "100%",
-          overflowX: "auto",
-          padding: "0 20px",
-          marginLeft: "10px",
-        }}
-      >
+      {/* Content */}
+      <div className="content-container">
         {isLoading ? (
           <SkeletonGrid />
         ) : (
           <CardList
-            id={id}
-            values={filteredValues}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-            scenes={scenes}
+          values={filteredValues}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          scenes={scenes}
+          id={id}
+
           />
         )}
       </div>
@@ -390,4 +393,4 @@ const MainApplication = () => {
   );
 };
 
-export default MainApplication;
+export default LandingScreen;

@@ -12,13 +12,12 @@ import { useState, useEffect } from "react";
 import { useGithub } from "../../context";
 import toast from "react-hot-toast";
 
-
 function EditPage() {
   const [updatedScenes, setUpdatedScenes] = useState([]);
   const { id } = useParams();
   const { githubId } = useGithub();
   const [collectionUrl, setCollectionUrl] = useState(null);
-  const [isSaving, setIsSaving] = useState(false); // Add state for button
+  const [isSaving, setIsSaving] = useState(false); 
 
   useEffect(() => {
     const getData = async () => {
@@ -50,15 +49,13 @@ function EditPage() {
       }
 
       const appdataRef = collection(database, "share");
-      const newShareDoc = {
+      const shareDoc = {
         userId: githubId,
         scenesData: updatedScenes,
         sceneId: id, 
       };
 
-      console.log("Data to share:", newShareDoc); // Log data before sharing
-
-      const docRef = await addDoc(appdataRef, newShareDoc);
+      const docRef = await addDoc(appdataRef,shareDoc);
       const shareableLink = `${window.location.origin}/shared/${docRef.id}`;
       console.log("Shareable Link: ", shareableLink);
 

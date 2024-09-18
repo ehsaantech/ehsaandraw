@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import EhsaanDrawPicture from "../../assets/EhsaanDrawPicture.png";
 import { Trash2 } from "lucide-react";
-import ExcaliDrawCard from "../ExcalidrawCard/ExcaliDrawCard";
-const CardList = ({ values, handleDelete, handleEdit, id }) => {
+import { ThemeContext } from "../../ThemeContext"; 
+
+const CardList = ({ values, handleDelete, handleEdit,scenes, id }) => {
+  const { theme } = useContext(ThemeContext); 
 
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return "Unknown Date";
-  
     const { seconds, nanoseconds } = timestamp;
-    const date = new Date(seconds * 1000 + nanoseconds / 1000000); // Convert to milliseconds
-    return date.toLocaleDateString(); // Format date as needed
+    const date = new Date(seconds * 1000 + nanoseconds / 1000000); 
+    return date.toLocaleDateString();
   };
-  
+
+  const lightThemeStyles = {
+    color: "#36454F",
+  };
+
+  const darkThemeStyles = {
+    color: "#E3E3E8",
+  };
+
   return (
     <>
-      {" "}
       <div
         style={{
           display: "grid",
@@ -23,19 +31,20 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
           padding: "20px",
         }}
       >
-        {values.map((item) => (
+        {values?.map((item) => (
           <div
             key={item.id}
             style={{
-              backgroundColor: "#fff",
+              ...((theme === "dark") ? darkThemeStyles : lightThemeStyles), 
               borderRadius: "8px",
-              border: "1px solid #e0e0e0",
+              border: theme === "dark" ? "2px solid #000":"2px solid #fff",
               overflow: "hidden",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              boxShadow: theme === "dark" ? "0 8px 12px #000" : "0 4px 8px rgba(0, 0, 0, 0.1)",
               transition: "transform 0.3s, box-shadow 0.3s",
               maxWidth: "100%",
               width: "100%",
             }}
+            
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-5px)";
               e.currentTarget.style.boxShadow =
@@ -46,15 +55,10 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
             }}
           >
-            <div
-              style={{
-                width: "100%",
-                padding: "8px",
-              }}
-            >
+            <div style={{ width: "100%", padding: "8px" }}>
               <button
                 onClick={() =>
-                  handleEdit(item.id, item.userName1, item.scenes1)
+                  handleEdit(item?.id, item?.userName1, item?.scenes1)
                 }
                 style={{
                   width: "100%",
@@ -64,12 +68,8 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                   cursor: "pointer",
                 }}
               >
+                <div style={{ padding: "20px" }}>
                 <div
-                  style={{
-                    padding: "20px",
-                  }}
-                >
-                  <div
                     style={{
                       width: "49%",
                       height: "auto",
@@ -85,9 +85,10 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                     style={{
                       width: "100%",
                       height: "auto",
-                      objectFit: "cover", 
+                      objectFit: "cover",
                       borderRadius: "4px",
-                      display: "block", 
+                      display: "block",
+                      
                     }}
                     alt="No pict"
                   />
@@ -105,17 +106,17 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                 <p
                   style={{
                     margin: 0,
-                    color: "#36454F",
+                    color: theme === "dark" ? "#E3E3E8" : "#36454F", 
                     fontWeight: "500",
                     padding: "5px",
-                    fontFamily: 'Cascadia, sans-serif',
+                    fontFamily: "Cascadia, sans-serif",
                   }}
                 >
-                  {item.userName1}
+                  {item?.userName1}
                 </p>
 
                 <button
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => handleDelete(item?.id)}
                   style={{
                     background: "none",
                     border: "none",
@@ -125,41 +126,23 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
                     padding: "10px",
                   }}
                 >
-                  <Trash2 color="#000000" />
+                  <Trash2 color={theme === "dark" ? "#E3E3E8" : "#000000"} />
                 </button>
               </div>
               <p
                 style={{
                   margin: 0,
-                  color: "#888",
+                  color: theme === "dark" ? "#888888" : "#888",
                   fontSize: "14px",
                   padding: "5px",
-                  fontFamily: 'Cascadia, sans-serif',
+                  fontFamily: "Cascadia, sans-serif",
                 }}
               >
-                <strong>Created At:</strong> {formatTimestamp(item.createdAt)}
+                <strong>Created At:</strong> {formatTimestamp(item?.createdAt)}
               </p>
             </div>
           </div>
         ))}
-        <style jsx>{`
-          @media (min-width: 768px) {
-            div[style] {
-              grid-template-columns: repeat(
-                3,
-                1fr
-              ); /* 3 cards on medium (iPad) screens */
-            }
-          }
-          @media (min-width: 1024px) {
-            div[style] {
-              grid-template-columns: repeat(
-                4,
-                1fr
-              ); /* 4 cards on large (desktop) screens */
-            }
-          }
-        `}</style>
       </div>
       {values.length === 0 && (
         <div
@@ -174,8 +157,8 @@ const CardList = ({ values, handleDelete, handleEdit, id }) => {
         >
           <p
             style={{
-              color: "#000000",
-              fontSize: "30px", // Adjust font size if needed
+              color: theme === "dark" ? "#E3E3E8" : "#000000",
+              fontSize: "30px",
             }}
           >
             No document created so far.
